@@ -56,3 +56,20 @@ with open(htmlDirectory+"/topicSize.json",'w') as filey:
 
 
 
+###### PCA section
+try:
+	import numpy as np
+	from sklearn import decomposition
+except ImportError:
+	print("You haven't installed scikit-learn. Please see the readme.md for details about installing the machine learning libraries.")
+
+
+with open("data/nplsa.model.16", 'r') as file:
+	file.readline()
+	data = [[float(num) for num in line.strip().split(" ")] for line in file]
+
+topicWords = np.array(data)
+
+pca = decomposition.PCA(n_components=2).fit(topicWords)
+
+points = pca.transform(topicWords)
