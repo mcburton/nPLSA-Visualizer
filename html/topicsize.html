@@ -1,0 +1,90 @@
+
+<!doctype html>
+
+<script src="./js/d3.v2.js"></script>
+<script src="./js/nv.d3.js"></script>
+<link href="./css/nv.d3.css" rel="stylesheet" type="text/css">
+<style>
+
+body {
+  overflow-y:scroll;
+}
+
+text {
+  font: 12px sans-serif;
+}
+
+#chart1, #chart2 {
+  height: 600px;
+}
+
+
+</style>
+<body>
+  <h1>Topic Size Per Iteration - Stacked Area Chart</h1>
+  <div>
+    <svg id="chart1"></svg>
+  </div>
+
+  <div>
+    <!--<svg id="chart2"></svg>-->
+  </div>
+
+
+<script>
+d3.json('data.json',function(data){
+
+  var colors = d3.scale.category20b();
+  keyColor = function(d, i) {return colors(d.key)};
+
+  nv.addGraph(function() {
+    var chart = nv.models.stackedAreaChart()
+                  .x(function(d) { return d.x })
+                  .y(function(d) { return d.y })
+                  .color(keyColor)
+                  //.clipEdge(true);
+  
+  // chart.stacked.scatter.clipVoronoi(false);
+  
+     chart.xAxis
+        .showMaxMin(false)
+        .tickFormat(function(d) { return "Step: " + d });
+  
+    chart.yAxis
+        .tickFormat(d3.format(',.2f'));
+  
+    d3.select('#chart1')
+      .datum(data)
+        //.transition().duration(1000)
+        .call(chart);
+  
+    nv.utils.windowResize(chart.update);
+  
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.stackedAreaChart()
+                  .x(function(d) { return d.x })
+                  .y(function(d) { return d.y })
+                  .color(keyColor);
+                  //.clipEdge(true);
+  
+    chart.xAxis
+        .tickFormat(function(d) { return "Step: " + d });
+  
+    chart.yAxis
+        .tickFormat(d3.format(',.2f'));
+  
+    d3.select('#chart2')
+      .datum(data)
+        //.transition().duration(1000)
+        .call(chart);
+  
+    nv.utils.windowResize(chart.update);
+  
+    return chart;
+  });
+
+});
+</script>
