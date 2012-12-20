@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>nPLSA Vizualizer</title>
+    
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        padding-left: 30px;
+      }
+
+      .vizlink {
+        position: relative;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: block;
+      }
+
+      .vizlink img {
+        height: 300px;
+        width: 80%;
+        max-width: 600px;
+      }
+
+      .vizlink .caption {
+        position: absolute;
+        z-index: 10;
+        bottom: 15px;
+        left: 10px;
+        color: white;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">nPLSA Visualizer</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="map.html">Topic Map</a></li>
+              <li><a href="size.html">Topic Size</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+   <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span8">
+
+        <h1>nPLSA Topic Model Vizualizer</h1>
+        <a class="vizlink" href="map.html">
+          <img class="img-rounded" src="img/topicmap.png">
+          <div class="caption">
+            <h3>Topic Map<h3>
+          </div>
+        </a>
+        <a class="vizlink" href="size.html">
+          <img class="img-rounded" src="img/topicsize.png">
+          <div class="caption">
+            <h3>Topic Size<h3>
+          </div>
+        </a>
+        
+      </div> <!-- span10 -->
+      <div clas="span2">
+        <h2>What is this?</h2>
+        <p> This site is a tool for analyzing the nPLSA topic modeling process.</p>
+      </div>
+    </div>
+
+
+    </div> <!-- /container -->
+  </body>
+</html>

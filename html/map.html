@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<title>Topic Map</title>
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<style>
+ 
+/*path {
+  fill: yellow;
+  stroke: #000;
+}*/
+ 
+circle {
+  fill: #fff;
+  stroke: #000;
+  pointer-events: none;
+}
+
+#controls button {
+  width: 100px;
+}
+
+#controls .input-prepend {
+  float: right;
+  padding-right: 5px;
+}
+
+body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        padding-left: 30px;
+      }
+
+</style>
+<body>
+
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">nPLSA Visualizer</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="">Topic Map</a></li>
+              <li><a href="size.html">Topic Size</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+  <div class="container">
+    <h1>nPLSA Topic Maps per Step</h1>
+    <div id="map"></div>
+    <div id="controls">
+      <div class="btn-group">
+        <button id="stepback" class="btn" onclick="stepback()"><i class="icon-step-backward"></i> <span>Back</span></button>
+        <button id="playpause" class="btn" onclick="playpause()" ><i class="icon-play"></i> <span>Play</span></button>
+        <button id="stepfoward" class="btn" onclick="stepup()"><i class="icon-step-forward"></i> <span>Foreward</span></button>
+        <span class="input-prepend">
+         <span class="add-on">Step </span>
+         <input class="span2" id="inputIcon" type="text" disabled>
+        </span>
+      </div>
+    </div>
+</div> <!-- container -->
+
+</body>
+
+<!-- <script src="js/jquery-latest.js"></script> -->
+<script src="js/d3.v3.js"></script>
+<script>
+
+var width = 960,
+    height = 500;
+var margin = 10; 
+
+var updateCircles;
+var datay;
+
+var play = true;
+
+var stepup;
+var stepback;
+
+var playpause = function(){
+  console.log("hi");
+  if (play){
+    play = false;
+    d3.select("#playpause span").text("Pause");
+    d3.select("#playpause i").attr("class", "icon-pause");
+  }
+  else {
+    play = true;
+    d3.select("#playpause span").text("Play");
+    d3.select("#playpause i").attr("class", "icon-play");
+  }
+}
+
+
+
+var color = d3.scale.category20c();
+    
+var svg = d3.select("div#map").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("class", "PiYG");
+
+d3.json("topicGraph.json", function(data) {
+  datey = data;
+
+
+  var allpoints = data.map(function(o){ return o['points'].map(function(o){return o['point']})}).reduce(function(a, b) { return a.concat(b) });
+  var xExtent = d3.extent(allpoints, function(d) { return d[0]});
+  var yExtent = d3.extent(allpoints, function(d) { return d[1]});
+
+  var xScale = d3.scale.linear()
+      .range([margin,width-margin])
+      .domain(xExtent);
+    
+    var yScale = d3.scale.linear()
+      .range([height-margin,margin])
+      .domain(yExtent);
+    
+    var scaley = function(d) {
+      //console.log(d)
+      return [xScale(d['point'][0]),yScale(d['point'][1])]
+    }
+
+  updateCircles = function(dater) {
+
+    step = dater['step'];
+    vertices = dater['points']
+    
+    d3.select("#inputIcon").attr("value", step)
+
+    var paths = svg.selectAll("path")
+      .data(d3.geom.voronoi(vertices.map(scaley)));
+
+    // paths.transition()
+    //     .duration(500)
+    //     .attr("fill", function(d, i) { return color(i)})
+    //     .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+
+    paths.attr("fill", function(d, i) { return color(i)})
+        .attr("d", function(d) { return "M" + d.join("L") + "Z"; });
+
+    paths.enter().append("path")
+      .attr("fill", function(d, i) { return color(i)})
+      .attr("d", function(d) {  return "M" + d.join("L") + "Z"; });
+
+    paths.exit().remove();
+
+
+    var circles = svg.selectAll("circle")
+      .data(vertices, function(d,i){ return "topic"+i});
+
+
+    circles.transition()
+        .duration(500)
+        .attr("transform", function(d) { return "translate(" + scaley(d) + ")"; })
+        .attr("r", 5);
+
+    circles.enter().append("circle")
+      .attr("transform", function(d) { return "translate(" + scaley(d) + ")"; })
+      .attr("r", 5);
+
+    circles.exit().remove();
+
+  }
+
+
+updateCircles(data[0]);
+i = 0;
+stepup = function() {
+  i += 1;
+  if (i == data.length ){
+    i = 0;
+  }
+  updateCircles(data[i]);
+  
+}
+stepback = function() {
+  i -= 1;
+  if (i < 0) {
+    i = data.length -1;
+  }
+  updateCircles(data[i]);
+
+}
+
+
+setInterval(function() {
+  if(play) {
+    stepup()
+  }
+  
+}, 800); 
+
+
+})
+
+
+ 
+</script>

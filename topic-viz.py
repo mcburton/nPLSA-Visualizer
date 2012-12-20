@@ -19,8 +19,8 @@ htmlDirectory = "./html/"
 
 
 try:
-	filelist = [f for f in os.listdir(dataDirectory) if f.startswith('nplsa.topicSize.') and f[-1].isdigit()]
-	iterations = max([int(re.sub("\D", "", f)) for f in filelist])
+	sizefilelist = [f for f in os.listdir(dataDirectory) if f.startswith('nplsa.topicSize.') and f[-1].isdigit()]
+	iterations = max([int(re.sub("\D", "", f)) for f in sizefilelist])
 	with open(dataDirectory + "nplsa.topicSize." + str(iterations)) as file:
    		numTopics = len(file.readlines())
 except:
@@ -35,9 +35,23 @@ print("Building data files for Topic Size visualization.")
 
 series = [{"key":str(num), "values":[]} for num in range(0,numTopics)]  # set up the data structure for the d3.js visualization
 
-for filename in filelist:
+# for filename in sizefilelist:
+# 	num = int(re.sub("\D", "", filename))
+# 	print(num)
+# 	try:
+# 		with open(dataDirectory + str(filename)) as file:
+# 			content = [float(line.strip()) for line in file]
+# 			line = content + ([0] * (numTopics - len(content)))
+# 			for topic, value in enumerate(line):
+# 				series[int(topic)]["values"].append({"x":num, "y":float(value)})
+# 	except Exception, e:
+# 		print(e)
+
+
+
+for num in range(1,iterations):
 	try:
-		with open(dataDirectory + str(filename)) as file:
+		with open(dataDirectory + "nplsa.topicSize." + str(num)) as file:
 			content = [float(line.strip()) for line in file]
 			line = content + ([0] * (numTopics - len(content)))
 			for topic, value in enumerate(line):
@@ -66,27 +80,27 @@ except ImportError:
 
 
 try:
-		filelist = [f for f in os.listdir(dataDirectory) if f.startswith('nplsa.model.') and f[-1].isdigit()]
+		mapfilelist = [f for f in os.listdir(dataDirectory) if f.startswith('nplsa.model.') and f[-1].isdigit()]
 except:
 	print("You appear to be missing your nplsa.model files, I can't compute the topic plots without them.")
 
 
-topicGraphData = list()
-for filename in filelist:
-	step = int(re.sub("\D", "", filename))
-	with open(dataDirectory + file) as file:
-		file.readline() # toss the first line of the file, it doesn't contain data
-		data = [[float(num) for num in line.strip().split(" ")] for line in file]
-		topicWords = np.array(data)
-		pca = decomposition.PCA(n_components=2).fit(topicWords)
-		points = pca.transform(topicWords)
-		keyPoints = [{"key":"topic"+str(index), "point":point} for index, point in enumerate(points)]
-	topicGraphData.append({"step":step, "points":keyPoints})
+# topicGraphData = list()
+# for filename in mapfilelist:
+# 	step = int(re.sub("\D", "", filename))
+# 	with open(dataDirectory + filename) as file:
+# 		file.readline() # toss the first line of the file, it doesn't contain data
+# 		data = [[float(num) for num in line.strip().split(" ")] for line in file]
+# 		topicWords = np.array(data)
+# 		pca = decomposition.PCA(n_components=2).fit(topicWords)
+# 		points = pca.transform(topicWords)
+# 		keyPoints = [{"key":"topic"+str(index), "point":point} for index, point in enumerate(points)]
+# 	topicGraphData.append({"step":step, "points":keyPoints})
 
 
 topicGraphData = list()
 
-for filename in filelist:
+for filename in mapfilelist:
 	step = int(re.sub("\D", "", filename))
 	with open(dataDirectory + filename) as file:
 		file.readline() # toss the first line of the file, it doesn't contain data
@@ -94,7 +108,7 @@ for filename in filelist:
 		topicWords = np.array(data)
 		pca = decomposition.PCA(n_components=2).fit(topicWords)
 		points = pca.transform(topicWords)
-		keyPoints = [{"key":"topic"+str(index), "point":point} for index, point in enumerate(points)]
+		keyPoints = [{"key":"topic"+str(index), "point":point.tolist()} for index, point in enumerate(points)]
 	topicGraphData.append({"step":step, "points":keyPoints})
     
 topicGraphData = sorted(topicGraphData, key=lambda k: k['step'])
