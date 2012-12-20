@@ -13,8 +13,8 @@ import sys
 import json
 
 
-dataDirectory = "./data"
-htmlDirectory = "./html"
+dataDirectory = "./data/"
+htmlDirectory = "./html/"
 
 
 
@@ -37,7 +37,7 @@ series = [{"key":str(num), "values":[]} for num in range(0,numTopics)]  # set up
 
 for filename in filelist:
 	try:
-		with open(iterationsDirectory + str(filename)) as file:
+		with open(dataDirectory + str(filename)) as file:
 			content = [float(line.strip()) for line in file]
 			line = content + ([0] * (numTopics - len(content)))
 			for topic, value in enumerate(line):
@@ -48,10 +48,10 @@ for filename in filelist:
 
 print("Writing topic size JSON files to HTML directory.")
 
-with open(htmlDirectory+"/meta.json", 'w') as metaJson:
+with open(htmlDirectory+"meta.json", 'w') as metaJson:
 	metaJson.write(json.dumps({"iterations":iterations, "numtopics":numTopics}))
 
-with open(htmlDirectory+"/topicSize.json",'w') as filey:
+with open(htmlDirectory+"topicSize.json",'w') as filey:
 	filey.write(json.dumps(series))
 
 
@@ -62,14 +62,44 @@ try:
 	from sklearn import decomposition
 except ImportError:
 	print("You haven't installed scikit-learn. Please see the readme.md for details about installing the machine learning libraries.")
+	sys.exit()
 
 
-with open("data/nplsa.model.16", 'r') as file:
-	file.readline()
-	data = [[float(num) for num in line.strip().split(" ")] for line in file]
+try:
+		filelist = [f for f in os.listdir(dataDirectory) if f.startswith('nplsa.model.') and f[-1].isdigit()]
+except:
+	print("You appear to be missing your nplsa.model files, I can't compute the topic plots without them.")
 
-topicWords = np.array(data)
 
-pca = decomposition.PCA(n_components=2).fit(topicWords)
+topicGraphData = list()
+for filename in filelist:
+	step = int(re.sub("\D", "", filename))
+	with open(dataDirectory + file) as file:
+		file.readline() # toss the first line of the file, it doesn't contain data
+		data = [[float(num) for num in line.strip().split(" ")] for line in file]
+		topicWords = np.array(data)
+		pca = decomposition.PCA(n_components=2).fit(topicWords)
+		points = pca.transform(topicWords)
+		keyPoints = [{"key":"topic"+str(index), "point":point} for index, point in enumerate(points)]
+	topicGraphData.append({"step":step, "points":keyPoints})
 
-points = pca.transform(topicWords)
+
+topicGraphData = list()
+
+for filename in filelist:
+	step = int(re.sub("\D", "", filename))
+	with open(dataDirectory + filename) as file:
+		file.readline() # toss the first line of the file, it doesn't contain data
+		data = [[float(num) for num in line.strip().split(" ")] for line in file]
+		topicWords = np.array(data)
+		pca = decomposition.PCA(n_components=2).fit(topicWords)
+		points = pca.transform(topicWords)
+		keyPoints = [{"key":"topic"+str(index), "point":point} for index, point in enumerate(points)]
+	topicGraphData.append({"step":step, "points":keyPoints})
+    
+topicGraphData = sorted(topicGraphData, key=lambda k: k['step'])
+
+
+with open(htmlDirectory+"topicGraph.json",'w') as filey:
+	filey.write(json.dumps(topicGraphData))
+
