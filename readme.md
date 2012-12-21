@@ -1,8 +1,7 @@
 
+# nPLSA Visualizer 
 
-# Topic Model Vizualization Kit (TMVK)
-
-This repository contains a set of scripts and a directory structure
+This repository contains a set of scripts, a directory structure, and the HTML scaffold for the nPLSA visualization tool. 
 
 
 topic-viz.py - This script processes the output of nPLSA topic models and produces JSON files to drop into the static HTML directory (described below).
