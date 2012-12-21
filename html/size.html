@@ -52,7 +52,20 @@ text {
     <div>
       <!--<svg id="chart2"></svg>-->
     </div>
+    <div class="hero-unit">
+
+<h2>How to interpret this chart</h2>
+
+<p>The interactive visualization above shows the internal state of the model, specifically the number of word tokens per topic, during each step of the modeling process. </p>
+
+<p>Iteration steps are along the X axis and the number of word tokens along the Y axis. Individual topics are represented by the colored area stacked on top of each other. The topic number and its color are listed in the legend in the top right of the chart. The three modes for representing the data (stacked, stream, expanded) are listed on the top left of the chart. This visualization is interactive, you can click on a topic area to zoom into viewing only that topic and the distribution of tokens over time. Click the topic area again to return to viewing all topics. You turn on or off specific topics by clicking on the number or dot in the legend. </p>
+
+<p>The stacked area chart is particularly useful for visualizing the nPLSA modeling process because it allows us to see the emergence of and redistribution of tokens per topic over the lifetime of the modeling process. The left side of the chart shows the early stages of the iterative process. In the beginning there are only a couple topics. As the process proceeds new topics are introduced (stacked on top of the existing topics) and the number of tokens is redistributed. On the right side of the visualization the token distributions have mainly stabilized so the slopes of the topic distributions flattens out with only minor changes due to the nPLSA optimization process.</p>
+
+<p>There are currently a bunch of bugs in this version of the chart. The chart is built on top of the re-usable stacked area chart from the <a href="http://nvd3.org">NVD3 project</a>. The expanded view for individual topics does not render correctly, I might need to simply disable that viewing mode. For very large topic models with many steps the visualization can run slowly, a future version of the data processing script may resort to sampling from the full nPLSA.topicSize.NUM data. The current visualization does not include much information about the content of the topics, i.e., their word distributions or the document mixture. I could see adding some top words to the area chart, but such additions must be made carefully so as to not clutter up the aesthetics of the chart. </p>
+
   </div>
+</div>
   
 
 <script src="js/d3.v2.js"></script>

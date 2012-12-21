@@ -17,7 +17,11 @@ circle {
 }
 
 #controls button {
-  width: 100px;
+  width: 120px;
+}
+
+#controls {
+  padding-bottom: 30px;
 }
 
 #controls .input-prepend {
@@ -65,6 +69,19 @@ body {
          <input class="span2" id="inputIcon" type="text" disabled>
         </span>
       </div>
+    </div>
+    <div class="hero-unit">
+      <h2>How to interpret this chart</h2>
+
+<p>The animated visualization above shows the relationship between topics reduced to a two dimensional space for each step of the modeling process.</p>
+
+<p>Each white dot represents a topic, the movement of each dot to a new location represents the change in their relationships to each other (and to new topics) for each step in the modeling process. The current step is indicated in the lower right of the chart. The animation can be paused and resumed, or manually stepped forward and backward using the controls on the lower left of the chart. For each topic point at each step, a new <a href="http://en.wikipedia.org/wiki/Voronoi_diagram">Voronoi tessellation</a> is computed to aid in distinguishing each topic. The size of each topic cell is an artifact of the Voronoi diagramming and does not necessarily provide any meaningful information directly derived from the data. Mainly looks pretty and can be used to facilitate clicking and interacting with each individual topic point (such interaction is not currently implemented). </p>
+
+<p>Each topic in the model consists of a distribution of words in the entire corpus. The specific distribution varies with each topic. The very high dimensional topic/word distributions has been reduced by the python script using Principal Component Analysis (using the implementation in the <a href="http://scikit-learn.org">scikit-learn</a> python package). Using PCA on the topic/word distributions is a very crude way to perform dimension reduction, but serves the purpose of generating a representation of the model in two dimensions. One of the goals of this visualization is to (someday) enable the evaluation of multiple dimension reduction strategies. I envision having multiple topic maps side-by-side that show the differences in how PCA, fastmap, or multidimensional scaling of various measures like cosine similarity, euclidian distance or Pearson correlation each transform the data. Crucial to this evaluation, and currently missing from this visualization, is the inclusion of top-words and linking to documents with high topic proportions. </p>
+
+<p>The ultimate goal is to find a dimension reduction strategy that produces topic maps that “make sense” intuitively and facilitate the <em>interpretation</em> of topic models in relation to the documents being modeled. While the theoretical soundness of various modeling and dimension reduction strategies is important, many times they produce results that are impossible to translate into humanly <em>meaninful</em> insights. </p>
+
+
     </div>
 </div> <!-- container -->
 

@@ -21,7 +21,7 @@
 
       .vizlink img {
         height: 300px;
-        width: 80%;
+        width: 90%;
         max-width: 600px;
       }
 
@@ -59,28 +59,48 @@
       </div>
     </div>
 
-   <div class="container-fluid">
+   <div class="container">
     <div class="row-fluid">
-      <div class="span8">
+      <div class="span7">
 
         <h1>nPLSA Topic Model Vizualizer</h1>
-        <a class="vizlink" href="map.html">
-          <img class="img-rounded" src="img/topicmap.png">
-          <div class="caption">
-            <h3>Topic Map<h3>
-          </div>
-        </a>
         <a class="vizlink" href="size.html">
           <img class="img-rounded" src="img/topicsize.png">
           <div class="caption">
             <h3>Topic Size<h3>
           </div>
         </a>
+        <a class="vizlink" href="map.html">
+          <img class="img-rounded" src="img/topicmap.png">
+          <div class="caption">
+            <h3>Topic Map<h3>
+          </div>
+        </a>
         
       </div> <!-- span10 -->
-      <div clas="span2">
+      <div class="span5">
         <h2>What is this?</h2>
-        <p> This site is a tool for analyzing the nPLSA topic modeling process.</p>
+
+<p>This site is a tool for analyzing the nPLSA topic modeling process. nPLSA or nonparametric Probabilistic Latent Semantic Analysis is a forthcoming topic modeling technique by Jian Tang, Ming Zhang, and Qiaozhu Mei. The nPLSA process is unique from other more popular topic modeling techniques like Probabilistic Latent Semantic Analysis or Latent Dirichlet Allocation (LDA) because it does not require you to specify the number of topics <em>a priori.</em> nPLSA infers the number of topics through an iterative process that creates new topics from documents in the corpus. For more information about nPLSA please read the paper on Arxive.org [link to be posted]. </p>
+
+<p>The purpose of this tool is to being providing insight into the iterative process by visualizing the emergence of new topics and their relations at each step of the modeling process. Currently the tool supports two kinds of interactive visualizations:</p>
+
+<ul>
+<li>A stacked area chart of topic size (measured in # of tokens) over time (in steps)</li>
+<li>An animated Voronoi scatter plot of topic’s dimensionally reduced relationships over time (in steps)</li>
+</ul>
+
+<p>The data for these visualizations is generated from a python script, topic-viz.py. The script ingests the model output from the java implementation of nPLSA, <em>Clean.ParameterFreeNonParametricPLSA.</em> The application produces several files at each iterative step:</p>
+
+<ul>
+<li><strong>nplsa.model.NUM</strong> - the topic/word distributions per step(NUM)</li>
+<li><strong>nplsa.topicSize.NUM</strong>- the number of tokens per topic per step(NUM)</li>
+<li><strong>nplsa.topicMixture.NUM</strong> - the topic/document distributions per step(NUM)</li>
+</ul>
+
+<p>The python script consumes the <em>nplsa.model.num</em> and <em>nplsa.topicSize.num</em> files and generates JSON files for the visualization. The specific processing details are covered on each visualization’s page. They can be visited by clicking the images to the left or via the navigation bar at the top of the page. </p>
+
+
       </div>
     </div>
 
