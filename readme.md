@@ -1,3 +1,5 @@
+
+
 # Topic Model Vizualization Kit (TMVK)
 
 This repository contains a set of scripts and a directory structure
@@ -23,3 +25,24 @@ easy_install scikit-learn
 ```
 
 The installation of these packages might take a while, scipy has to compile FORTRAN. If you have difficulty or those installation steps don't work (which is highly likely), please let me know.
+
+Once you have gotten those packages install AND you have the model output in the ./data/ directory then you can run the script:
+
+```
+python topic-viz.py
+```
+
+Assuming this works correctly (again, highly unlikely) the script should have generated 3 JSON files in the ./html/ directory:
+- meta.json
+- topicGraph.json
+- topicSize.json
+
+Once these are in the ./html/ directory you are GOOD TO GO. Now all you need to do is serve up the HTML directory from a web server. The fastest and easiest way to do this is with the python simple HTTP server.
+```
+cd html
+python -m SimpleHTTPServer 8888
+```
+
+Now just visit [http://localhost:8888](http://localhost:8888) and you should see the website. 
+
+Good Luck!
